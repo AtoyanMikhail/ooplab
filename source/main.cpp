@@ -1,6 +1,7 @@
 #include "UI.hpp"
 #include "Field.hpp"
 #include "ShipManager.hpp"
+#include "Player.hpp"
 #include <iostream>
 #include <vector>
 
@@ -16,25 +17,28 @@ int main(){
     field->PlaceShip(ships[3], 'I'-'A', 7, false);
    
     system("clear");
+    Player* player = new Player(field, manager); 
+    
 
-    ui.drawField(field->getCells(), false);
-    ui.drawField(field->getCells(), true);
+    ui.drawField(player->GetField()->getCells(), false);
+    ui.drawField(player->GetField()->getCells(), true);
 
     for (int i = 0; i < 7; i++){
         for (int j = 0; j < 7; j++) {
-            field->attackCell(i, j);
+            player->HandleAttack(i, j);
         }
     }
 
-    std::cout << field->attackCell('I'-'A', 7) << std::endl;
-    std::cout << field->attackCell('I'-'A', 7) << std::endl;
-    std::cout << manager->update() << std::endl;
+    auto res = player->HandleAttack(8, 7);
+    std::cout << res.Message() << std::endl;
+    res = player->HandleAttack(8, 7);
+    std::cout << res.Message() << std::endl;
+    std::cout << res.ShipsDestroyed() << std::endl;
 
-    ui.drawField(field->getCells(), false);
-    ui.drawField(field->getCells(), true);
+    ui.drawField(player->GetField()->getCells(), false);
+    ui.drawField(player->GetField()->getCells(), true);
 
-    delete field;
-    delete manager;
+    delete player;
     std::cout << "Game over!" << std::endl; 
     return 0;
 }

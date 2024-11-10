@@ -1,21 +1,20 @@
 #include "Player.hpp"
 
-Player::Player(ShipManager* sM, Field* f, UI* ui){
-    shipManager = sM;
-    enemyField = f;
-    ui = ui;
-}
+Field* Player::GetField() {
+    return field;
+};
 
-Player::~Player(){}
-
-ShipManager* Player::getShipManager() const {
+ShipManager* Player::GetShipManager() {
     return shipManager;
-}
+};
 
-Field* Player::getEnemyField() const {
-    return enemyField;
-}
-
-UI* Player::getUI() const {
-    return ui;
-}
+Result Player::HandleAttack(int x, int y) {
+    try {
+        int aliveShips = shipManager->countAliveShips();
+        std::string message = field->attackCell(x, y);
+        int updatedLiveShips = shipManager->countAliveShips();
+        return Result{message, true, shipManager->countAliveShips()==0, aliveShips - updatedLiveShips};
+    } catch (std::exception& e) {
+        return Result{e.what(), false, false, false};
+    }
+};

@@ -1,3 +1,6 @@
+// #ifndef ABILITYMANAGER_HPP
+// #define ABILITYMANAGER_HPP
+
 // #include <iostream>
 // #include <random>
 // #include <queue>
@@ -29,3 +32,5 @@
 // private:
 //     std::queue<Ability> abilities;
 // };
+
+// #endif

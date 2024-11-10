@@ -38,7 +38,7 @@ std::string Field::attackCell(int x, int y){
     if (cell->getStatus() == CellStatus::Water) {
         if (cell->isRevealed()) {
             return "Can not attack empty cell";
-        }
+        }   
         cell->reveal();
         return "Missed!";
     }

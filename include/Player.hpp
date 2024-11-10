@@ -2,21 +2,23 @@
 #define PLAYER_HPP
 
 #include "ShipManager.hpp"
-#include "UI.hpp"
 #include "Field.hpp"
-#include "AbilityManager.hpp"
+#include "Abilities.hpp"
+#include "Result.hpp"
 
-class Player {
+
+class Player{
 public:
-    Player(ShipManager* sM, Field* f, UI* ui);
-    ShipManager* getShipManager() const;
-    Field* getEnemyField() const;
-    UI* getUI() const;
-    ~Player();
+    Player(Field* f, ShipManager* sm) : field(f), shipManager(sm) {}
+    ~Player() {delete shipManager; delete field;}
+    Field* GetField();
+    ShipManager* GetShipManager();
+    Result HandleAttack(int x, int y);
+
+    bool TakeDoubleDamage;
 private:
+    Field* field;
     ShipManager* shipManager;
-    Field* enemyField;
-    UI* ui;
 };
 
 #endif

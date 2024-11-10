@@ -1,31 +1,35 @@
-// #include "Field.hpp"
-// #include "ShipManager.hpp"
+#ifndef ABILITIES_HPP
+#define ABILITIES_HPP
 
-// struct Params {
-//     uint8_t x;
-//     uint8_t y;
-// };
+#include <algorithm>
+#include <random>
 
-// // Класс-интерфейс для способности
-// class Ability {
-// public:
-//     virtual void apply(*Player, *Player, Params params) = 0;
-// };
+#include "Player.hpp"
+#include "Result.hpp"
+#include "Context.hpp"
 
-// // Двойной урон
-// class DoubleDamageAbility : public Ability {
-// public:
+// Класс-интерфейс для способности
+class Ability {
+public:
+    virtual Result Apply(Player* player, Context ctx) = 0;
+};
 
-// };
+// Двойной урон
+class DoubleDamage : public Ability {
+    public:
+    Result Apply(Player* player, Context ctx) noexcept;
+};
 
-// // Сканер
-// class ScannerAbility : public Ability {
-// public:
+// Сканер
+class Scanner : public Ability {
+    public:
+    Result Apply(Player* player, Context ctx) noexcept;
+};
 
-// };
+// Обстрел
+class Bombardment : public Ability {
+    public:
+    Result Apply(Player* player, Context ctx) noexcept;
+};
 
-// // Обстрел
-// class BombardmentAbility : public Ability {
-// public:
-
-// };
+#endif

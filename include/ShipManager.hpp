@@ -1,3 +1,7 @@
+#ifndef SHIPMANAGER_HPP
+#define SHIPMANAGER_HPP
+
+
 #include <cstdarg>
 #include <string>
 
@@ -14,8 +18,9 @@ public:
     ShipManager& operator=(ShipManager&& other) noexcept;
     std::vector<Ship*> getShips() const;
     int countAliveShips() const;
-    std::string update();
 private:
     std::vector<Ship*> ships;
     int AliveCnt;
 };
+
+#endif

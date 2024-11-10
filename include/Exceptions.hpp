@@ -1,3 +1,6 @@
+#ifndef EXCEPTIONS_HPP
+#define EXCEPTIONS_HPP
+
 #include <exception>
 
 class AbilityException : public std::exception {
@@ -25,3 +28,5 @@ public:
         return "Off-the-field attack!";
     }
 };
+
+#endif

@@ -1,4 +1,5 @@
 #include "ShipManager.hpp"
+#include <iostream>
 
 ShipManager::ShipManager(int amount, std::vector<int> sizes) {
     for (auto size: sizes) {
@@ -70,10 +71,3 @@ int ShipManager::countAliveShips() const {
     return alive;
 }
 
-std::string ShipManager::update() {
-    if (AliveCnt > countAliveShips()) {
-        AliveCnt = countAliveShips();
-        return "Ship destroyed!";
-    }
-    return "";
-}
