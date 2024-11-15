@@ -29,4 +29,11 @@ public:
     }
 };
 
+class AttackingDestroyedSegmentException : public std::exception {
+public:
+    const char* what() const throw() {
+        return "Segment is already destroyed!";
+    }
+};
+
 #endif

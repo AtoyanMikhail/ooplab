@@ -20,7 +20,7 @@ public:
     CellStatus getStatus();
     void reveal();  // Метод для открытия ячейки
     bool isRevealed();
-    void attackSegment();
+    void attackSegment(uint8_t damage);
     // Returns true if ship segment was placed successfully. False otherwise
     bool setShipSegment(ShipSegment* segment);
 

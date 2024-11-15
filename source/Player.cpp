@@ -1,20 +1,31 @@
 #include "Player.hpp"
 
-Field* Player::GetField() {
-    return field;
+std::vector<std::vector<FieldCell>> Player::GetFieldCells() {
+    return field->getCells();
 };
 
-ShipManager* Player::GetShipManager() {
-    return shipManager;
+
+std::vector<Ship*> Player::GetShips() {
+    return shipManager->getShips();
 };
 
-Result Player::HandleAttack(int x, int y) {
+Result Player::HandleAttack(int x, int y) noexcept {
+    std::string message;
+    int aliveShips;
+    int updatedLiveShips;
+
     try {
-        int aliveShips = shipManager->countAliveShips();
-        std::string message = field->attackCell(x, y);
-        int updatedLiveShips = shipManager->countAliveShips();
-        return Result{message, true, shipManager->countAliveShips()==0, aliveShips - updatedLiveShips};
+        aliveShips = shipManager->countAliveShips();
+        uint8_t damage = 1;
+        if (TakeDoubleDamage) {
+            damage = 2;
+            TakeDoubleDamage = false;
+        }
+        message = field->attackCell(x, y, damage);
+        updatedLiveShips = shipManager->countAliveShips();
     } catch (std::exception& e) {
         return Result{e.what(), false, false, false};
     }
+
+    return Result{message, true, shipManager->countAliveShips()==0, aliveShips - updatedLiveShips};
 };

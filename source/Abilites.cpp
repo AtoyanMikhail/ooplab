@@ -1,40 +1,56 @@
 #include "Abilities.hpp"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
-Result DoubleDamage::Apply(Player* player, Context ctx) {
+Result DoubleDamage::Apply(Player* player, Context ctx) noexcept {
     player->TakeDoubleDamage = true;
     return Result{"Double damage applied", true, false, 0};
 };
 
-Result Scanner::Apply(Player* player, Context ctx) {
+Result Scanner::Apply(Player* player, Context ctx) noexcept {
+    int x, y;
+    
     try {
-        int x = std::stoi(ctx.GetParam("x"));
-        int y = std::stoi(ctx.GetParam("y"));
-
-        for (int i = x; i < x + 1; i++) {
-            for (int j = y; j < y + 1; j++) {
-                if (player->GetField()->getCells()[i][j].getStatus() != CellStatus::Water) {
-                    return Result{"Scanner detected a ship", true, false, 0};
-                }
-            }
-        }
+        x = std::stoi(ctx.GetParam("x"));
+        y = std::stoi(ctx.GetParam("y"));
     } catch (const std::exception &e) {
         return Result{"Invalid scanner coordinates", false, false, 0};
     }
+
+    auto field = player->GetFieldCells();
+    for (int i = y; i <= y + 1; i++) {
+        for (int j = x; j <= x + 1; j++) {
+            if (j < 0 || i < 0 || i >= field.size() || j >= field[0].size()) {
+                return Result{"Scanner out of bounds", false, false, 0};
+            }
+
+            if (field[i][j].getStatus() != CellStatus::Water && field[i][j].getStatus() != CellStatus::Destroyed)  {
+                return Result{"Scanner detected a ship", true, false, 0};
+            }
+        }
+    }
+
+    return Result{"No ship detected", true, false, 0};
 };
 
-Result Bombardment::Apply(Player* player, Context ctx) {
-    std::vector<Ship*> ships = player->GetShipManager()->getShips();
-    std::vector<Ship*> aliveShips;
-    std::copy_if(ships.begin(), ships.end(), std::back_inserter(aliveShips), [](Ship* ship) {return ship->isDestroyed();});
-    
-    std::vector<ShipSegment*> randomSegments = aliveShips[rand()%aliveShips.size()]->getSegments();
-    std::vector<ShipSegment*> randomUndestroyedSegments;
-    std::copy_if(randomSegments.begin(), randomSegments.end(), std::back_inserter(randomUndestroyedSegments), [](ShipSegment* segment) { return!segment->isDestroyed();});
+Result Bombardment::Apply(Player* player, Context ctx) noexcept {
+    std::vector<Ship*> ships = player->GetShips();
+    std::vector<Ship*> AliveShips;
 
-    int aliveShipsCnt = player->GetShipManager()->countAliveShips();
-    ShipSegment* segment = randomUndestroyedSegments[rand()%randomSegments.size()];
-    segment->takeDamage(1);
-    int aliveShipsAfterBombardmentCnt = player->GetShipManager()->countAliveShips();
+    for (auto ship : ships) {
+        if (!ship->isDestroyed()) {
+            AliveShips.push_back(ship);
+        }
+    }
 
-    return Result("Segment hit!", true, player->GetShipManager()->countAliveShips()==0, aliveShipsCnt-aliveShipsAfterBombardmentCnt);
+    if (AliveShips.empty()) {
+        return Result{"All ships are dead", false, true, 0};
+    }
+
+    Ship* randomShip = AliveShips[rand()%AliveShips.size()];
+    ShipSegment* randomSegment = randomShip->getSegments()[rand()%randomShip->getSize()];
+    randomSegment->takeDamage(1);
+    return Result{"Bombardment hit a segment!", true, false, 0};
 }
+

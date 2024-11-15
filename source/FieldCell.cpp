@@ -2,9 +2,17 @@
 
 FieldCell::FieldCell() : status(CellStatus::Water), revealed(false), shipSegment(nullptr) {}
 
-
 CellStatus FieldCell::getStatus() {
-    return status;
+    if (shipSegment == nullptr) {
+        return CellStatus::Water;
+    }
+    if (shipSegment->isDestroyed()) {
+        return CellStatus::Destroyed;
+    }
+    if (shipSegment->isDamaged()) {
+        return CellStatus::Hit;
+    }
+    return CellStatus::ShipPart;
 }
 
 void FieldCell::reveal() {
@@ -15,18 +23,13 @@ bool FieldCell::isRevealed() {
     return revealed;
 }
 
-void FieldCell::attackSegment() {
+void FieldCell::attackSegment(uint8_t damage) {
     revealed = true;
     if (shipSegment == nullptr) {
         return;
     }
 
-    shipSegment->takeDamage(1);
-    if (shipSegment->isDestroyed()) {
-        status = CellStatus::Destroyed;
-    } else {
-        status = CellStatus::Hit;
-    }
+    shipSegment->takeDamage(damage);
 }
 
 bool FieldCell::setShipSegment(ShipSegment* segment) {

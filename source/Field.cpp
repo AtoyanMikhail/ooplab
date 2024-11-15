@@ -33,8 +33,13 @@ std::vector<std::vector<FieldCell>> Field::getCells() {
     return result;
 }
 
-std::string Field::attackCell(int x, int y){
-    auto cell = field[y][x];
+std::string Field::attackCell(int x, int y, uint8_t damage){
+    if (x < 0 || y < 0 || x >= field[0].size() || y >= field.size()) {
+        throw OutOfBoundsException();
+    }
+    
+    FieldCell* cell = field[y][x];
+    
     if (cell->getStatus() == CellStatus::Water) {
         if (cell->isRevealed()) {
             return "Can not attack empty cell";
@@ -42,10 +47,8 @@ std::string Field::attackCell(int x, int y){
         cell->reveal();
         return "Missed!";
     }
-    if (cell->getStatus() == CellStatus::Destroyed) {
-        return "Can not attack destroyed segment";
-    }
-    cell->attackSegment();
+
+    cell->attackSegment(damage);
     if (cell->getStatus() == CellStatus::Destroyed) {
         return "Segment destroyed!";
     }
@@ -57,11 +60,11 @@ bool Field::PlaceShip(Ship* ship, int horizontalPos, int verticalPos, bool verti
     
     if (vertical) {
         if (verticalPos < 0 || verticalPos + size > field.size()) {
-            return false;
+            throw ShipPlacementException();
         }
     } else {
         if (horizontalPos < 0 || horizontalPos + size > field[0].size()) {
-            return false;
+            throw ShipPlacementException();
         }
     }
 

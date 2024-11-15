@@ -1,20 +1,23 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "ShipManager.hpp"
-#include "Field.hpp"
-#include "Abilities.hpp"
-#include "Result.hpp"
+#include <algorithm>
+#include <random>
 
+#include "Field.hpp"
+
+#include "ShipManager.hpp"
+#include "Result.hpp"
 
 class Player{
 public:
-    Player(Field* f, ShipManager* sm) : field(f), shipManager(sm) {}
+    Player(Field* f, ShipManager* sm) : field(f), shipManager(sm), TakeDoubleDamage(false){}
     ~Player() {delete shipManager; delete field;}
-    Field* GetField();
-    ShipManager* GetShipManager();
-    Result HandleAttack(int x, int y);
-
+    
+    std::vector<std::vector<FieldCell>> GetFieldCells();
+    
+    std::vector<Ship*> GetShips();
+    Result HandleAttack(int x, int y) noexcept;
     bool TakeDoubleDamage;
 private:
     Field* field;
