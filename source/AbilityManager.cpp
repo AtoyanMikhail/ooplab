@@ -1,18 +1,13 @@
 #include "AbilityManager.hpp"
 
-AbilityManager::AbilityManager(AbilityFactory* factory) :factory(factory){
-    std::vector<Ability*> vec;
-    for (int i = 0; i < 3; i++){
-        vec.push_back(factory->createAbility(static_cast<AbilityType>(i)));  
-    }
-    std::random_shuffle(vec.begin(), vec.end());  
-    for (Ability* ability : vec) {
-        abilities.push(ability);
-    }
-};
+AbilityManager::AbilityManager(AbilityFactory* factory) :factory(factory){};
 
 std::string AbilityManager::previewNextAbility() const {
-    return abilities.front()->Name();
+    if (!abilities.empty()) {
+        return abilities.front()->Name();
+    }
+    return "No more abilities available.";
+
 }
 
 void AbilityManager::addRandom() {
@@ -26,11 +21,33 @@ void AbilityManager::addAbility(AbilityType type){
     abilities.push(newAbility);
 };
 
-Ability* AbilityManager::pop() {
+void AbilityManager::addAbility(int type){
+    Ability* newAbility = factory->createAbility(static_cast<AbilityType>(type)); 
+
+    abilities.push(newAbility);
+};
+
+Ability* AbilityManager::GetAblity() {
     if (!abilities.empty()) {
         Ability* ability = abilities.front();
-        abilities.pop();
         return ability;
     }
     throw NoAbilitiesException();
 };
+
+void AbilityManager::RemoveAbilityAtStart() {
+    try {
+        abilities.pop();
+    } catch (const std::exception &e) {
+        throw NoAbilitiesException();
+    }
+}
+
+std::vector<int> AbilityManager::GetAllAbilities() {
+    std::vector<int> abilitiesVec;
+    while (!abilities.empty()) {
+        abilitiesVec.push_back(static_cast<int>(abilities.front()->GetType()));
+        abilities.pop();
+    }
+    return abilitiesVec;
+}

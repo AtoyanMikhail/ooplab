@@ -4,11 +4,14 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <string>
+
 #include "FieldCell.hpp"
 
-class UI{
+class CellsRenderer{
 public:
-    void drawField(std::vector<std::vector<FieldCell>> field, bool isEnemyField);
+    std::vector<std::vector<std::string>> RenderCells(std::vector<std::vector<FieldCell>> field, bool isEnemyField);
+    std::string RenderField(std::vector<std::vector<std::string>> field, bool isEnemyField);
 };
 
 #endif

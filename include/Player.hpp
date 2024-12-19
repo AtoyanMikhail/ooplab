@@ -11,15 +11,17 @@
 
 class Player{
 public:
-    Player(Field* f, ShipManager* sm) : field(f), shipManager(sm), TakeDoubleDamage(false){}
+    Player(Field* f, ShipManager* sm, bool TakeDoubleDamage) : field(f), shipManager(sm), TakeDoubleDamage(TakeDoubleDamage){}
     ~Player() {delete shipManager; delete field;}
     
     std::vector<std::vector<FieldCell>> GetFieldCells();
     
+    Result PlaceShip(Ship* ship, int x, int y, bool vertical) noexcept;
+    void PlaceAllShips();
     std::vector<Ship*> GetShips();
     Result HandleAttack(int x, int y) noexcept;
     bool TakeDoubleDamage;
-private:
+protected:
     Field* field;
     ShipManager* shipManager;
 };

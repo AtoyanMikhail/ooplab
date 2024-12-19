@@ -3,12 +3,6 @@
 
 #include "Abilities.hpp"
 
-enum class AbilityType : int {
-    DoubleDamage,
-    Scanner,
-    Bombardment,
-};
-
 class AbilityFactory {
 public:
     virtual Ability* createAbility(const AbilityType type) = 0;

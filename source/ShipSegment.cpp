@@ -2,6 +2,8 @@
 
 ShipSegment::ShipSegment(): HP(2) {};
 
+ShipSegment::ShipSegment(int hp) : HP(hp) {};
+
 ShipSegment::~ShipSegment() {}
 
 void ShipSegment::takeDamage(uint8_t damage) { 
@@ -18,7 +20,7 @@ void ShipSegment::takeDamage(uint8_t damage) {
 }
 
 bool ShipSegment::isDamaged() { 
-    return DamageTaken;
+    return HP < 2;
 }
 
 bool ShipSegment::isDestroyed() {

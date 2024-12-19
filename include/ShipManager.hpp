@@ -10,6 +10,7 @@
 class ShipManager{
 public:
     ShipManager(int amount, std::vector<int> sizes);
+    ShipManager(std::vector<Ship*> ships): ships(ships) {};
     ~ShipManager();
     ShipManager(const ShipManager& other);
     ShipManager(ShipManager&& other) noexcept;
@@ -17,6 +18,7 @@ public:
     ShipManager& operator=(const ShipManager& other);
     ShipManager& operator=(ShipManager&& other) noexcept;
     std::vector<Ship*> getShips() const;
+    int countShips() const { return ships.size(); };
     int countAliveShips() const;
 private:
     std::vector<Ship*> ships;

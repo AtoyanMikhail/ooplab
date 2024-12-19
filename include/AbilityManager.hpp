@@ -16,8 +16,10 @@ public:
     std::string previewNextAbility() const;
     void addRandom();
     void addAbility(AbilityType);
-    Ability* pop();
-
+    void addAbility(int);
+    Ability* GetAblity();
+    std::vector<int> GetAllAbilities();
+    void RemoveAbilityAtStart();
 private:
     AbilityFactory* factory;
     std::queue<Ability*> abilities;
